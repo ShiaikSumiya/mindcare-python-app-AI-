@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindCare Student & Therapist Support</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="crisis-bar">
+    Crisis Helpline: If you are in immediate danger, call <strong>988</strong> or local emergency services now.
+  </div>
+
+  <section id="authScreen" class="auth-screen">
+    <article class="auth-card">
+      <div class="auth-brand">
+        <div class="brand-mark">MindCare</div>
+        <p>Secure AI mental health support platform for students and therapists</p>
+      </div>
+
+      <div class="auth-tabs">
+        <button id="registerTab" class="auth-tab auth-tab--active" type="button">Student Register</button>
+        <button id="therapistLoginTab" class="auth-tab" type="button">Therapist Login</button>
+      </div>
+
+      <form id="registerForm" class="auth-form">
+        <div class="form-grid">
+          <div>
+            <label for="registerName">Full Name</label>
+            <input id="registerName" type="text" placeholder="Your full name">
+          </div>
+          <div>
+            <label for="registerUsername">Username</label>
+            <input id="registerUsername" type="text" placeholder="Optional username">
+          </div>
+        </div>
+
+        <div>
+          <label for="registerEmail">Email Address</label>
+          <input id="registerEmail" type="text" placeholder="your@email.com">
+        </div>
+
+        <div class="form-grid">
+          <div>
+            <label for="registerAge">Age</label>
+            <input id="registerAge" type="number" min="13" max="25" placeholder="Age">
+          </div>
+          <div>
+            <label for="registerGender">Gender</label>
+            <select id="registerGender">
+              <option value="Prefer not to say">Prefer not to say</option>
+              <option value="Female">Female</option>
+              <option value="Male">Male</option>
+              <option value="Non-binary">Non-binary</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div>
+            <label for="registerInstitution">Institution</label>
+            <input id="registerInstitution" type="text" placeholder="College / School name">
+          </div>
+          <div>
+            <label for="registerCourse">Course / Year</label>
+            <input id="registerCourse" type="text" placeholder="B.Tech 2nd Year">
+          </div>
+        </div>
+
+        <div>
+          <label for="registerPassword">Password</label>
+          <input id="registerPassword" type="password" placeholder="Create a password">
+        </div>
+
+        <div>
+          <label for="registerConfirm">Confirm Password</label>
+          <input id="registerConfirm" type="password" placeholder="Repeat your password">
+        </div>
+
+        <label class="check-card" for="registerAnonymous">
+          <input id="registerAnonymous" type="checkbox">
+          <span>
+            <strong>Enable Anonymous Mode</strong>
+            <small>Your real name will be hidden in the student chat workspace.</small>
+          </span>
+        </label>
+
+        <button class="primary-button" type="submit">Create My Account</button>
+        <div id="registerMessage" class="form-message">Only students aged 13 to 25 can register in this app.</div>
+        <button id="showStudentLoginLink" class="text-link" type="button">Already registered? Login here</button>
+      </form>
+
+      <form id="studentLoginForm" class="auth-form hidden">
+        <div>
+          <label for="studentLoginIdentifier">Username or Email</label>
+          <input id="studentLoginIdentifier" type="text" placeholder="Enter your username or email">
+        </div>
+
+        <div>
+          <label for="studentLoginPassword">Password</label>
+          <input id="studentLoginPassword" type="password" placeholder="Enter your password">
+        </div>
+
+        <button class="primary-button" type="submit">Login as Student</button>
+        <div id="studentLoginMessage" class="form-message success-message">Your data is encrypted and protected. Privacy-first student support is active.</div>
+        <button id="showRegisterLink" class="text-link" type="button">Don't have an account? Register here</button>
+      </form>
+
+      <form id="therapistLoginForm" class="auth-form hidden">
+        <div>
+          <label for="therapistLoginEmail">Therapist Email</label>
+          <input id="therapistLoginEmail" type="text" placeholder="therapist@mindcare.com">
+        </div>
+
+        <div>
+          <label for="therapistLoginPassword">Password</label>
+          <input id="therapistLoginPassword" type="password" placeholder="Enter therapist password">
+        </div>
+
+        <button class="primary-button" type="submit">Login as Therapist</button>
+        <div id="therapistLoginMessage" class="form-message success-message">Demo therapist access is available for dashboard review.</div>
+        <div class="helper-card">
+          <strong>Demo therapist credentials</strong>
+          <small>Email: therapist@mindcare.com</small>
+          <small>Password: Therapist@123</small>
+        </div>
+      </form>
+    </article>
+  </section>
+
+  <section id="studentWorkspace" class="workspace-screen hidden">
+    <header class="chat-topbar">
+      <div>
+        <div class="chat-title">MindCare AI Support</div>
+        <div class="chat-subtitle">Online • Private • 24/7</div>
+      </div>
+      <div class="topbar-actions">
+        <span id="anonymousBadge" class="pill">Anonymous</span>
+        <button id="newChatButton" class="pill-button" type="button">New</button>
+        <button id="studentLogoutButton" class="pill-button" type="button">Logout</button>
+      </div>
+    </header>
+
+    <main class="chat-layout">
+      <section class="conversation-area">
+        <div id="chatMessages" class="chat-messages"></div>
+        <div id="responseChips" class="response-chips"></div>
+
+        <div class="quick-row">
+          <span>Quick:</span>
+          <button class="quick-chip" data-prompt="I feel stressed about my exams.">Stressed</button>
+          <button class="quick-chip" data-prompt="I feel anxious and nervous.">Anxious</button>
+          <button class="quick-chip" data-prompt="I feel depressed and low.">Depressed</button>
+          <button class="quick-chip" data-prompt="I cannot sleep at night.">Sleep</button>
+          <button class="quick-chip" data-prompt="I feel lonely and isolated.">Lonely</button>
+          <button class="quick-chip" data-prompt="I am struggling with my studies.">Exams</button>
+          <button class="quick-chip" data-prompt="Please suggest coping strategies.">Coping</button>
+        </div>
+
+        <form id="chatForm" class="chat-input-bar">
+          <input id="chatInput" type="text" placeholder="Share how you feel... I am here">
+          <button type="submit">➤</button>
+        </form>
+
+        <div class="chat-footer-note">Encrypted • Private • GDPR Compliant</div>
+      </section>
+
+      <aside class="analysis-sidebar">
+        <div class="analysis-head">
+          <span>Live Analysis</span>
+          <strong id="analysisTime">00:00</strong>
+        </div>
+
+        <div id="statusCard" class="status-card">
+          <div id="statusEmoji" class="status-emoji">🙂</div>
+          <div class="status-label">Mental Health Status</div>
+          <div id="statusText" class="status-text">Ready</div>
+          <div id="confidenceText" class="status-subtext">Confidence: 0% | 0 msgs</div>
+        </div>
+
+        <div class="wellness-block">
+          <div class="wellness-title">Wellness Score</div>
+          <div id="wellnessRing" class="wellness-ring">
+            <div>
+              <strong id="wellnessScore">100</strong>
+              <span>/ 100</span>
+            </div>
+          </div>
+          <div id="wellnessLabel" class="wellness-badge">Mood Stable</div>
+        </div>
+
+        <div class="indicator-section">
+          <div class="indicator-title">Condition Indicators</div>
+
+          <div class="indicator-row">
+            <span>Stress</span>
+            <div class="bar"><div id="stressBar" class="fill fill--stress"></div></div>
+            <strong id="stressValue">0</strong>
+          </div>
+
+          <div class="indicator-row">
+            <span>Anxiety</span>
+            <div class="bar"><div id="anxietyBar" class="fill fill--anxiety"></div></div>
+            <strong id="anxietyValue">0</strong>
+          </div>
+
+          <div class="indicator-row">
+            <span>Depression</span>
+            <div class="bar"><div id="depressionBar" class="fill fill--depression"></div></div>
+            <strong id="depressionValue">0</strong>
+          </div>
+
+          <div class="indicator-row">
+            <span>Loneliness</span>
+            <div class="bar"><div id="lonelinessBar" class="fill fill--loneliness"></div></div>
+            <strong id="lonelinessValue">0</strong>
+          </div>
+
+          <div class="indicator-row">
+            <span>Anger</span>
+            <div class="bar"><div id="angerBar" class="fill fill--anger"></div></div>
+            <strong id="angerValue">0</strong>
+          </div>
+        </div>
+
+        <div class="recommend-section">
+          <div class="indicator-title">Recommended Solutions</div>
+          <div id="suggestionTitle" class="solution-title">Support Plan</div>
+          <p id="summaryText" class="solution-summary">Chat with the bot and your personalized suggestions will appear here.</p>
+          <ol id="suggestionList" class="suggestion-list">
+            <li>Share a few sentences about your current situation.</li>
+            <li>The app will calculate output and accuracy rate.</li>
+          </ol>
+        </div>
+
+        <div id="alertBanner" class="alert-box hidden">
+          High-risk language detected. Please contact a trusted person, counselor, or emergency service immediately.
+        </div>
+      </aside>
+    </main>
+  </section>
+
+  <section id="therapistWorkspace" class="therapist-workspace hidden">
+    <aside class="therapist-sidebar">
+      <div class="therapist-brand">MindCare Pro</div>
+      <div class="therapist-profile">
+        <div class="therapist-avatar">👨‍⚕️</div>
+        <strong>Dr. Admin Therapist</strong>
+        <span>Licensed Therapist</span>
+      </div>
+
+      <nav class="therapist-nav">
+        <button id="dashboardNav" class="nav-button nav-button--active" type="button">Dashboard</button>
+        <button id="trainNav" class="nav-button" type="button">Train AI Chatbot</button>
+        <button id="reportsNav" class="nav-button" type="button">Reports & Analytics</button>
+        <button id="therapistLogoutButton" class="nav-button" type="button">Logout</button>
+      </nav>
+    </aside>
+
+    <main class="therapist-main">
+      <section id="dashboardView" class="therapist-view">
+        <header class="therapist-header">
+          <div>
+            <h2>Therapist Dashboard</h2>
+            <p id="dashboardSubtitle">Welcome back, Dr. Admin Therapist</p>
+          </div>
+          <button id="addTemplateButton" class="primary-small" type="button">Add Q&A Training</button>
+        </header>
+
+        <div class="metric-cards">
+          <article class="metric-summary metric-summary--blue">
+            <strong id="registeredStudentsMetric">0</strong>
+            <span>Registered Students</span>
+          </article>
+          <article class="metric-summary metric-summary--green">
+            <strong id="chatSessionsMetric">0</strong>
+            <span>Total Chat Sessions</span>
+          </article>
+          <article class="metric-summary metric-summary--red">
+            <strong id="crisisAlertsMetric">0</strong>
+            <span>Active Crisis Alerts</span>
+          </article>
+          <article class="metric-summary metric-summary--orange">
+            <strong id="trainedQaMetric">0</strong>
+            <span>Q&A Trained</span>
+          </article>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="white-panel">
+            <div class="panel-head">
+              <h3>Active Crisis Alerts</h3>
+            </div>
+            <div id="crisisAlertList" class="empty-state-panel"></div>
+          </article>
+
+          <article class="white-panel">
+            <div class="panel-head">
+              <h3>Session Overview</h3>
+            </div>
+            <div class="overview-legend">
+              <span class="legend-item legend-low">Low Risk</span>
+              <span class="legend-item legend-medium">Medium Risk</span>
+              <span class="legend-item legend-high">High Risk</span>
+              <span class="legend-item legend-critical">Critical</span>
+            </div>
+            <div id="riskDistribution" class="risk-distribution"></div>
+          </article>
+        </div>
+
+        <article class="white-panel">
+          <div class="panel-head">
+            <h3>Recent Chat Sessions</h3>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Session ID</th>
+                  <th>User</th>
+                  <th>Messages</th>
+                  <th>Risk Level</th>
+                  <th>Avg Mood</th>
+                  <th>Type</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="recentSessionsTable"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section id="trainView" class="therapist-view hidden">
+        <header class="therapist-header">
+          <div>
+            <h2>Train AI Chatbot</h2>
+            <p>Improve chatbot responses with categorized therapeutic Q&A knowledge.</p>
+          </div>
+        </header>
+
+        <div class="train-layout">
+          <article class="white-panel">
+            <div class="panel-head">
+              <h3>Add Q&A</h3>
+            </div>
+
+            <form id="knowledgeForm" class="knowledge-form">
+              <label for="knowledgeCategory">Category</label>
+              <select id="knowledgeCategory">
+                <option value="General">General</option>
+                <option value="Stress">Stress</option>
+                <option value="Anxiety">Anxiety</option>
+                <option value="Depression">Depression</option>
+                <option value="Sleep">Sleep</option>
+                <option value="Loneliness">Loneliness</option>
+                <option value="Academic">Academic</option>
+                <option value="Coping">Coping</option>
+                <option value="Crisis">Crisis</option>
+              </select>
+
+              <label for="knowledgeQuestion">User Question / Phrase</label>
+              <textarea id="knowledgeQuestion" rows="4" placeholder="e.g. I am feeling stressed about my exams"></textarea>
+
+              <label for="knowledgeAnswer">Bot Response</label>
+              <textarea id="knowledgeAnswer" rows="5" placeholder="Write an empathetic, helpful response"></textarea>
+
+              <button class="primary-button" type="submit">Add To Knowledge Base</button>
+              <div id="knowledgeMessage" class="form-message">This section helps therapists improve chatbot guidance.</div>
+            </form>
+          </article>
+
+          <article class="white-panel">
+            <div class="panel-head">
+              <h3>Knowledge Base</h3>
+              <span id="knowledgeCountLabel" class="small-muted">0 entries</span>
+            </div>
+            <div id="knowledgeList" class="knowledge-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="reportsView" class="therapist-view hidden">
+        <header class="therapist-header">
+          <div>
+            <h2>Reports & Analytics</h2>
+            <p>Aggregated anonymized insights from student sessions.</p>
+          </div>
+        </header>
+
+        <div class="filter-row white-panel">
+          <div class="filter-chip">This Month</div>
+          <div class="filter-chip">Last 7 Days</div>
+          <div class="filter-chip">Live Dataset</div>
+        </div>
+
+        <div class="report-metrics">
+          <article class="report-card"><strong id="reportSessions">0</strong><span>Total Sessions</span></article>
+          <article class="report-card"><strong id="reportUsers">0</strong><span>Unique Users</span></article>
+          <article class="report-card"><strong id="reportMessages">0</strong><span>Total Messages</span></article>
+          <article class="report-card"><strong id="reportMood">0</strong><span>Avg Mood Score</span></article>
+          <article class="report-card"><strong id="reportCritical">0</strong><span>Critical Sessions</span></article>
+          <article class="report-card"><strong id="reportAnonymous">0</strong><span>Anonymous Sessions</span></article>
+        </div>
+
+        <article class="white-panel">
+          <div class="panel-head">
+            <h3>Most Discussed Issues</h3>
+          </div>
+          <div id="issueCards" class="issue-cards"></div>
+        </article>
+      </section>
+    </main>
+  </section>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
